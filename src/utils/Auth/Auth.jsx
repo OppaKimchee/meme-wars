@@ -14,23 +14,16 @@ export default class Auth {
 				scope: 'openid profile email'
 			}
 		},
-		additionalSignUpFields: [{
-			name: "address",
-			placeholder: "enter your address",
-			// The following properties are optional
-			icon: "https://cdn2.iconfinder.com/data/icons/minicons/Png/Home.png",
-			prefill: "123 street",
-			validator: function (address) {
-				return {
-					valid: address.length >= 10,
-					hint: "Must have 10 or more chars" // optional
-				};
-			}
+		additionalSignUpFields: [
+		{
+			name: "first_name",
+			placeholder: "Enter your first name"
 		},
 		{
-			name: "full_name",
-			placeholder: "Enter your full name"
-		}]
+			name: "last_name",
+			placeholder: "Enter your last name"
+		}
+		]
 	});
 
 	userProfile;

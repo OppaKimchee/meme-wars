@@ -1,4 +1,6 @@
 var express = require('express');
+var session = require('express-session');
+var cors = require('cors');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -10,6 +12,7 @@ require('./config/database');
 
 var app = express();
 
+app.use(cors());
 app.use(logger('dev'));
 
 // Configure both serve-favicon & static middlewares
@@ -17,6 +20,13 @@ app.use(logger('dev'));
 app.use(favicon(path.join(__dirname, 'build', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
+
+app.use('/api/posts', require('react-s3-uploader/s3router')({
+	bucket: process.env.AWS_BUCKET_NAME,
+	region: 'us-west-1',
+	headers: {'Access-Control-Allow-Origin': '*'},
+	ACL: 'private'
+}));
 
 // app.use(memes);
 

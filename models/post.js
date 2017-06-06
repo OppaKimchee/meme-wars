@@ -3,10 +3,12 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
 	image: {type: String, required: true},
-	categorie: {
+	category: {
 		type: String, 
 		required: true, 
-		enum: ['Funny', 'Sad', 'U Mad Bro?', '']}
+		enum: ['Funny', 'Sad', 'U Mad Bro?', 'Cute']
+	},
+	rating: 0
 });
 
 module.exports = mongoose.model('Post', postSchema);
