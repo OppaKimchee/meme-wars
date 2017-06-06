@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './NavBar.css';
 
 const NavBar = (props) => {
@@ -11,7 +11,13 @@ const NavBar = (props) => {
         !isAuthenticated() && (<button onClick={props.auth.login} > Log In </button>)
       }
       {
-				isAuthenticated() && (<button onClick={props.auth.logout} > Log Out </button>)
+				isAuthenticated() 
+				&& (
+					<div>
+						<button onClick={props.auth.logout} > Log Out </button>
+						<Link to="/profile" > Profile </Link><br />
+					</div>
+					)
       }
 		</div>
 	);

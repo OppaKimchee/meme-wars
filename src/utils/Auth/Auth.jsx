@@ -3,68 +3,94 @@ import history from '../history/history';
 
 export default class Auth {
 
-  lock = new Auth0Lock(process.env.REACT_APP_AUTH0_CLIENT_ID, process.env.REACT_APP_AUTH0_DOMAIN, {
-    oidcConformant: true,
-    autoclose: true,
-    auth: {
-      redirectUrl: process.env.REACT_APP_AUTH0_CALLBACK_URL,
-      responseType: 'token id_token',
-      audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/userinfo`,
-      params: {
-        scope: 'openid'
-      }
-    }
-  });
+	lock = new Auth0Lock(process.env.REACT_APP_AUTH0_CLIENT_ID, process.env.REACT_APP_AUTH0_DOMAIN, {
+		oidcConformant: true,
+		autoclose: true,
+		auth: {
+			redirectUrl: process.env.REACT_APP_AUTH0_CALLBACK_URL,
+			responseType: 'token id_token',
+			audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/userinfo`,
+			params: {
+				scope: 'openid profile email'
+			}
+		},
+		additionalSignUpFields: [{
+			name: "address",
+			placeholder: "enter your address",
+			// The following properties are optional
+			icon: "https://cdn2.iconfinder.com/data/icons/minicons/Png/Home.png",
+			prefill: "123 street",
+			validator: function (address) {
+				return {
+					valid: address.length >= 10,
+					hint: "Must have 10 or more chars" // optional
+				};
+			}
+		},
+		{
+			name: "full_name",
+			placeholder: "Enter your full name"
+		}]
+	});
 
-  constructor() {
-    this.handleAuthentication();
-    // binds functions to keep this context
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
-    this.isAuthenticated = this.isAuthenticated.bind(this);
-  }
+	userProfile;
 
-  login() {
-    // Call the show method to display the widget.
-    this.lock.show();
-  }
+	constructor() {
+		this.handleAuthentication();
+		// binds functions to keep this context
+		this.login = this.login.bind(this);
+		this.logout = this.logout.bind(this);
+		this.isAuthenticated = this.isAuthenticated.bind(this);
+	}
 
-  handleAuthentication() {
-    // Add callback Lock's `authenticated` event
-    this.lock.on('authenticated', this.setSession.bind(this));
-    // Add callback for Lock's `authorization_error` event
-    this.lock.on('authorization_error', (err) => {
-      console.log(err);
-      alert(`Error: ${err.error}. Check the console for further details.`);
-      history.replace('/home');
-    });
-  }
+	login() {
+		// Call the show method to display the widget.
+		this.lock.show();
+	}
 
-  setSession(authResult) {
-    if (authResult && authResult.accessToken && authResult.idToken) {
-      // Set the time that the access token will expire at
-      let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-      localStorage.setItem('access_token', authResult.accessToken);
-      localStorage.setItem('id_token', authResult.idToken);
-      localStorage.setItem('expires_at', expiresAt);
-      // navigate to the home route
-      history.replace('/home');
-    }
-  }
+	handleAuthentication() {
+		// Add callback Lock's `authenticated` event
+		this.lock.on('authenticated', this.setSession.bind(this));
+		// Add callback for Lock's `authorization_error` event
+		this.lock.on('authorization_error', (err) => {
+			console.log(err);
+			alert(`Error: ${err.error}. Check the console for further details.`);
+			history.replace('/');
+		});
+	}
 
-  logout() {
-    // Clear access token and ID token from local storage
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('id_token');
-    localStorage.removeItem('expires_at');
-    // navigate to the home route
-    history.replace('/home');
-  }
+	setSession(authResult) {
+		if (authResult && authResult.accessToken && authResult.idToken) {
+			// Set the time that the access token will expire at
+			let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+			// Use the token in authResult to getUserInfo() and save it to localStorage
+			this.lock.getUserInfo(authResult.accessToken, function (error, profile) {
+				if (error) {
+					return console.log(error);
+				}
+				localStorage.setItem('profile', JSON.stringify(profile));
+			});
+			localStorage.setItem('access_token', authResult.accessToken);
+			localStorage.setItem('id_token', authResult.idToken);
+			localStorage.setItem('expires_at', expiresAt);
+			// navigate to the home route
+			history.replace('/');
+		}
+	}
 
-  isAuthenticated() {
-    // Check whether the current time is past the 
-    // access token's expiry time
-    let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return new Date().getTime() < expiresAt;
-  }
+	logout() {
+		// Clear access token and ID token from local storage
+		localStorage.removeItem('access_token');
+		localStorage.removeItem('id_token');
+		localStorage.removeItem('expires_at');
+		// navigate to the home route
+		history.replace('/');
+	}
+
+	isAuthenticated() {
+		// Check whether the current time is past the 
+		// access token's expiry time
+		let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+		return new Date().getTime() < expiresAt;
+	}
 }
