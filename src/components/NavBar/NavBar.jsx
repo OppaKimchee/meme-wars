@@ -7,6 +7,7 @@ const NavBar = (props) => {
 	return(
 		<div>
 			<Link to="/" > War Page </Link><br />
+			<Link to="/post" > Post a Meme </Link>
 			{
         !isAuthenticated() && (<button onClick={props.auth.login} > Log In </button>)
       }

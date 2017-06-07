@@ -21,12 +21,14 @@ app.use(favicon(path.join(__dirname, 'build', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
 
-app.use('/api/posts', require('react-s3-uploader/s3router')({
-	bucket: process.env.AWS_BUCKET_NAME,
-	region: 'us-west-1',
-	headers: {'Access-Control-Allow-Origin': '*'},
-	ACL: 'private'
-}));
+app.use('/api/users', require('./routes/api/users'));
+
+// app.use('/api/posts', require('react-s3-uploader/s3router')({
+// 	bucket: process.env.AWS_BUCKET_NAME,
+// 	region: 'us-west-1',
+// 	headers: {'Access-Control-Allow-Origin': '*'},
+// 	ACL: 'private'
+// }));
 
 // app.use(memes);
 

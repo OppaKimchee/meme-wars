@@ -15,14 +15,14 @@ export default class Auth {
 			}
 		},
 		additionalSignUpFields: [
-		{
-			name: "first_name",
-			placeholder: "Enter your first name"
-		},
-		{
-			name: "last_name",
-			placeholder: "Enter your last name"
-		}
+			{
+				name: "first_name",
+				placeholder: "Enter your first name"
+			},
+			{
+				name: "last_name",
+				placeholder: "Enter your last name"
+			}
 		]
 	});
 
@@ -58,20 +58,27 @@ export default class Auth {
 			let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
 			// Use the token in authResult to getUserInfo() and save it to localStorage
 			this.lock.getUserInfo(authResult.accessToken, function (error, profile) {
-				if (error) {
-					return console.log(error);
-				}
 				localStorage.setItem('profile', JSON.stringify(profile));
+				fetch('/api/users/authed', {
+					method: 'POST',
+					headers: new Headers({ 'Content-Type': 'application/json' }),
+					body: JSON.stringify(profile)
+				})
+				.then(res => res.json())
+				.then(user => {
+					console.log(user)
+					sessionStorage.setItem('userId', user._id);
+					history.replace('/');
+				});
 			});
 			localStorage.setItem('access_token', authResult.accessToken);
 			localStorage.setItem('id_token', authResult.idToken);
 			localStorage.setItem('expires_at', expiresAt);
-			// navigate to the home route
-			history.replace('/');
 		}
 	}
 
 	logout() {
+		sessionStorage.removeItem('userId');
 		// Clear access token and ID token from local storage
 		localStorage.removeItem('access_token');
 		localStorage.removeItem('id_token');

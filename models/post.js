@@ -8,7 +8,10 @@ const postSchema = new Schema({
 		required: true, 
 		enum: ['Funny', 'Sad', 'U Mad Bro?', 'Cute']
 	},
-	rating: 0
+	vote: 0,
+	user: {type: Schema.Types.ObjectId, ref: 'User'}
+}, {
+	timestamps: true
 });
 
 module.exports = mongoose.model('Post', postSchema);
