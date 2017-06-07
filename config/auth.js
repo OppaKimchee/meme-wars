@@ -1,10 +1,13 @@
 var User = require('../models/user');
 
 module.exports = function (req, res, next) {
-	var user = req.get('userId');
+	var user = req.get('UserId');
 	if (user) {
-		req.user = decoded.user;
-		next();
+		User.findById(user)
+			.then(user => {
+				req.user = user;
+				next();
+			});
 	} else {
 		next();
 	}

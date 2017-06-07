@@ -5,7 +5,7 @@ const PostPage = (props) => {
 
 	return (
 		<div>
-			<PostForm  user={props.user} />
+			<PostForm  {...props} />
 		</div>
 	);
 };

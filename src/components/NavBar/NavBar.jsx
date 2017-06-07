@@ -7,7 +7,6 @@ const NavBar = (props) => {
 	return(
 		<div>
 			<Link to="/" > War Page </Link><br />
-			<Link to="/post" > Post a Meme </Link>
 			{
         !isAuthenticated() && (<button onClick={props.auth.login} > Log In </button>)
       }
@@ -15,8 +14,9 @@ const NavBar = (props) => {
 				isAuthenticated() 
 				&& (
 					<div>
-						<button onClick={props.auth.logout} > Log Out </button>
+						<Link to="/post" > Post a Meme </Link><br />
 						<Link to="/profile" > Profile </Link><br />
+						<button onClick={props.auth.logout} > Log Out </button>
 					</div>
 					)
       }

@@ -8,27 +8,6 @@ import { Route, Switch } from 'react-router-dom';
 import './App.css';
 
 class App extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			user: this.getUser
-		};
-	}
-
-	componentDidMount() {
-		if (sessionStorage.getItem('userId')) {
-			this.setState({ user: this.getUser() });
-		}
-	}
-
-	getUser = () => {
-		fetch('/api/users/authed', {
-			method: 'GET',
-			header: new Headers({ 'User': sessionStorage.getItem('userId') })
-		})
-			.then(res => res.json())
-			.then(user => user)
-	}
 
 	render() {
 		return (
@@ -39,7 +18,7 @@ class App extends Component {
 				<Switch>
 					<Route exact path="/" render={(props) => <WarPage auth={this.props.auth} {...this.props} />} />
 					<Route exact path="/profile" render={(props) => <Profile auth={this.props.auth} {...this.props} />} />
-					<Route exact path="/post" render={(props) => <PostPage user={this.state.user} {...this.props} />} />
+					<Route exact path="/post" render={(props) => <PostPage {...props} />} />
 				</Switch>
 			</div>
 		);

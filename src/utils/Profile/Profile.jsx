@@ -16,7 +16,6 @@ class Profile extends Component {
 	};
 
 	render(){
-		console.log(this.showLoggedIn())
 		return (
 			<div>
 				{ this.showLoggedIn().name }

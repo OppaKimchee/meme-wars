@@ -1,6 +1,4 @@
 var express = require('express');
-var session = require('express-session');
-var cors = require('cors');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -12,8 +10,8 @@ require('./config/database');
 
 var app = express();
 
-app.use(cors());
 app.use(logger('dev'));
+app.use(require('./config/auth'));
 
 // Configure both serve-favicon & static middlewares
 // to serve from the production 'build' folder
@@ -22,6 +20,8 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
 
 app.use('/api/users', require('./routes/api/users'));
+app.use('/api/posts', require('./routes/api/posts'));
+app.use('/api/wars', require('./routes/api/wars'));
 
 // app.use('/api/posts', require('react-s3-uploader/s3router')({
 // 	bucket: process.env.AWS_BUCKET_NAME,
