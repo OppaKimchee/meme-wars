@@ -26,33 +26,41 @@ const getCurrentWar = (req, res) => {
 
 const checkExpiration = (war) => {
 	const expirationMinutes = 5;
-	let time = moment().format();
-	let warTime = war.createdAt;
-	let result = moment().diff(warTime)
-	let format = moment(result).format('mm')
+	let result = moment().diff(war.createdAt);
+	let format = moment(result).format('mm');
 	if (format > expirationMinutes){
-		console.log("war is expired")
+		console.log('war is expired');
 		return true;
 	}
 	console.log('war is not expired');
 	return false;
 };
 
-const newWar = (req, res) => {
-	War.findOne({}, {}, { sort: { 'created_at': 1 } }, (err, war) => {
-		if (err) return console.log('err')
-		console.log('?', war)
-		if (war === null) {
-			createWar()
-		} else {
-			generateNewWarFromPost(war)
-		}
-	});
-};
+// const newWar = (req, res) => {
+// 	War.findOne({}, {}, { sort: { 'created_at': 1 } }, (err, war) => {
+// 		if (err) return console.log('err');
+// 		console.log('?', war)
+// 		if (war === null) {
+// 			createWar();
+// 		} else {
+// 			generateNewWarFromPost(war);
+// 		}
+// 	});
+// };
 
 
 function createWar() {
-	console.log('creating first war');
+	// get the last war is there is one
+		// if there is a prev war
+			// get the winning post assign to meme1
+		// else
+			// get an unused meme for meme1
+		// end if
+		// get a post for meme2 assign to meme2
+		// create a new war
+		// assing meme1 & meme2
+		// return war
+
 	Post.find({ used: false }, (err, posts) => {
 		if (posts.length < 2) {
 			return console.log('not enough memes to war');
@@ -68,19 +76,19 @@ function createWar() {
 			})
 			.catch(err => {
 				console.log('error saving first war');
-			})
+			});
 	});
 }
 
-function generateNewWarFromPost(previousWar) {
-	Post.find({ used: false }, (err, posts) => {
-		if (posts.length < 2) {
-			return console.log('not enough memes to war');
-		}
-		let war = new War();
+// function generateNewWarFromPost(previousWar) {
+// 	Post.find({ used: false }, (err, posts) => {
+// 		if (posts.length < 2) {
+// 			return console.log('not enough memes to war');
+// 		}
+// 		let war = new War();
 
-	});
-}
+// 	});
+// }
 
 // newWar();
 
@@ -98,7 +106,6 @@ War.find({}).distinct('meme1').distinct('meme2')
 
 const wars = {
 	index,
-	createWar,
 	getCurrentWar
 };
 module.exports = wars;

@@ -1,0 +1,25 @@
+.check {
+	opacity: 0.5;
+	color: #996;
+}
+
+.memes {
+	height: 100%;
+}
+
+.row, .memeForm, .memeLabel {
+	height: 100%;
+}
+
+.form-group {
+	height: 93%;
+}
+
+.memeBtn {
+	width: 100%;
+}
+
+.img-thumbnail {
+	height: 100%;
+	overflow: hidden;
+}
