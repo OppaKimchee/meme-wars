@@ -5,30 +5,33 @@ import './NavBar.css';
 const NavBar = (props) => {
 	const { isAuthenticated } = props.auth;
 	return (
-		<div>
-			<li>
-				<Link to="/" > War Page </Link><br />
+		<ul className="nav sidebar-nav">
+			<li className="sidebar-brand">
+				M E M E &nbsp;&nbsp; W A R S
+			</li>
+			<li className="li1">
+				<Link to="/" > War Page </Link>
 			</li>
 			{
-				!isAuthenticated() && (<li><button className="btn btn-default" onClick={props.auth.login} ><i className="glyphicon glyphicon-log-in"></i></button></li>)
+				!isAuthenticated() && (<li className="li2"><button className="btn btn-link" onClick={props.auth.login} ><i className="glyphicon glyphicon-log-in"> Log In</i></button></li>)
 			}
 			{
 				isAuthenticated()
 				&& (
 					<div>
-						<li>
-							<Link to="/post" > Post a Meme </Link><br />
+						<li className="li3">
+							<Link to="/post" > Post a Meme </Link>
 						</li>
-						<li>
-							<Link to="/profile" > Profile </Link><br />
+						<li className="li4">
+							<Link to="/profile" > Profile </Link>
 						</li>
-						<li>
-							<button className="btn btn-default" onClick={props.auth.logout} ><i className="glyphicon glyphicon-log-out"></i></button>
+						<li className="li5">
+							<button className="btn btn-link" onClick={props.auth.logout} ><i className="glyphicon glyphicon-log-out"> Log&nbsp;Out</i></button>
 						</li>
 					</div>
 				)
 			}
-		</div>
+		</ul>
 	);
 };
 

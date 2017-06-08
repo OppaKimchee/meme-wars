@@ -45,13 +45,8 @@ class App extends Component {
 				<div className="overlay"></div>
 				<header className='header-footer'>M E M E &nbsp;&nbsp; W A R S</header>
 				<div className="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
-					<ul className="nav sidebar-nav">
-						<li className="sidebar-brand">
-							M E M E &nbsp;&nbsp; W A R S
-						</li>
 						<NavBar auth={this.props.auth} />
 						<Chat auth={this.props.auth} />
-					</ul>
 				</div>
 				<div id="page-content-wrapper">
 					<button type="button" className="hamburger is-closed" data-toggle="offcanvas">
