@@ -13,7 +13,7 @@ const NavBar = (props) => {
 				<Link to="/" > War Page </Link>
 			</li>
 			{
-				!isAuthenticated() && (<li className="li2"><button className="btn btn-link" onClick={props.auth.login} ><i className="glyphicon glyphicon-log-in"> Log In</i></button></li>)
+				!isAuthenticated() && (<li className="li2"><button className="btn btn-link" onClick={props.auth.login} style={{'color':'white'}}><i className="glyphicon glyphicon-log-in"> Log In</i></button></li>)
 			}
 			{
 				isAuthenticated()
@@ -26,7 +26,7 @@ const NavBar = (props) => {
 							<Link to="/profile" > Profile </Link>
 						</li>
 						<li className="li5">
-							<button className="btn btn-link" onClick={props.auth.logout} ><i className="glyphicon glyphicon-log-out"> Log&nbsp;Out</i></button>
+							<button className="btn btn-link" onClick={props.auth.logout} style={{'color':'white'}}><i className="glyphicon glyphicon-log-out"> Log&nbsp;Out</i></button>
 						</li>
 					</div>
 				)
