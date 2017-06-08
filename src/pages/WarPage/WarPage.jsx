@@ -24,10 +24,15 @@ class WarPage extends Component {
 	};
 
 	currentWar = () => {
-		this.findPosts()
-			.then(post => {
-				
-			});
+		return fetch('/api/wars/currentwar', {
+			method: 'GET',
+			headers: new Headers({ 'Content-Type': 'application/json' })
+		})
+			.then(res => res.json())
+			.then(war => console.log(war))
+			.catch(err => {
+				console.log('error getting current war', err)
+			})
 	}
 
 	/* 

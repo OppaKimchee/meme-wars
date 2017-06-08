@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
 	name: String,
+	used: {type: Boolean, default: false},
 	image: {type: String, required: true},
 	category: {
 		type: String, 
