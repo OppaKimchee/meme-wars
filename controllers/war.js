@@ -1,5 +1,6 @@
 const War = require('../models/war');
 const Post = require('../models/post');
+var moment = require('moment');
 
 const index = (req, res) => {
 	War.find({}, (err, wars) => {
@@ -7,35 +8,42 @@ const index = (req, res) => {
 	});
 };
 
-getCurrentWar = (req, res) => {
-	// War.findOne({}, {}, { sort: { 'created_at': 1 } }, (err, war) => {
-	// 	if (err) return res.status(400).json("error getting current war");
-	// 	res.json(war);
-	// });
-
+const getCurrentWar = (req, res) => {
 	War.findOne({}, {}, { sort: { 'created_at': 1 } })
 		.populate('meme1 meme2')
 		.exec((err, war) => {
 			if (err) return res.status(400).json("error getting current war");
+			// if no war exists OR war has expired
+			//    generate new war and return it
+			// else
+			//   return war
+			if(!war && checkExpiration ){
+				return createWar();
+			}
 			res.json(war);
 		});
 };
 
-const createWar = (req, res) => {
-	let war = new War(req.body);
-	war.save()
-		.then(war => {
-			res.json(war);
-		});
+const checkExpiration = (war) => {
+	const expirationMinutes = 5;
+	let time = moment().format();
+	let warTime = war.createdAt;
+	let result = moment().diff(warTime)
+	let format = moment(result).format('mm')
+	if (format > expirationMinutes){
+		console.log("war is expired")
+		return true;
+	}
+	console.log('war is not expired');
+	return false;
 };
-
 
 const newWar = (req, res) => {
 	War.findOne({}, {}, { sort: { 'created_at': 1 } }, (err, war) => {
 		if (err) return console.log('err')
 		console.log('?', war)
 		if (war === null) {
-			createFirstWar()
+			createWar()
 		} else {
 			generateNewWarFromPost(war)
 		}
@@ -43,7 +51,7 @@ const newWar = (req, res) => {
 };
 
 
-function createFirstWar() {
+function createWar() {
 	console.log('creating first war');
 	Post.find({ used: false }, (err, posts) => {
 		if (posts.length < 2) {
@@ -52,6 +60,8 @@ function createFirstWar() {
 		let newWar = new War();
 		newWar.meme1 = posts[0]._id;
 		newWar.meme2 = posts[1]._id;
+		posts[0].used = true;
+		posts[1].used = true;
 		newWar.save()
 			.then((e) => {
 				console.log(e)
@@ -69,7 +79,7 @@ function generateNewWarFromPost(previousWar) {
 		}
 		let war = new War();
 
-	})
+	});
 }
 
 // newWar();
