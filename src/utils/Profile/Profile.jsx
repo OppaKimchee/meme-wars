@@ -17,10 +17,10 @@ class Profile extends Component {
 
 	render(){
 		return (
-			<div>
+			<div className="profile">
 				{ this.showLoggedIn().name }
 				{ this.showLoggedIn().email }
-				<img src={this.showLoggedIn().picture} alt="profile pic"/>
+				<img className="img-responsive" src={this.showLoggedIn().picture} alt="profile pic"/>
 			</div>
 		);
 	}
