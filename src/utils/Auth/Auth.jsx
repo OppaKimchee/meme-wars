@@ -7,7 +7,7 @@ export default class Auth {
 		oidcConformant: true,
 		autoclose: true,
 		auth: {
-			redirectUrl: "war-of-the-memes.herokuapp.com",
+			redirectUrl: "war-of-the-memes.herokuapp.com/callback",
 			responseType: 'token id_token',
 			audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/userinfo`,
 			params: {
