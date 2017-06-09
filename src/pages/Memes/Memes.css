@@ -3,12 +3,17 @@
 	color: #996;
 }
 
+p {
+	color: #000;
+	font-size: 1.5em;
+}
+
 .row, .memes, .memeLabel {
 	height: 100%;
 }
 
 .form-group {
-	height: 93%;
+	height: 91%;
 }
 
 .memeBtn {

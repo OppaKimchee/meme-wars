@@ -24,13 +24,13 @@ class Memes extends Component {
 		var selectedMeme = this.state.input1 ? 'meme1pts' : 'meme2pts';
 		fetch(`/api/wars/upvote/${selectedMeme}`, {
 			method: "GET",
-			header: new Headers({'Content-Type': 'application/json'})
+			header: new Headers({ 'Content-Type': 'application/json' })
 		})
-		.then(res => res.json())
-		.then(war => {
-			this.props.warUpdated(war);
-		})
-		.catch(err => console.log(err));
+			.then(res => res.json())
+			.then(war => {
+				this.props.warUpdated(war);
+			})
+			.catch(err => console.log(err));
 	}
 
 	handleToggle = () => {
@@ -39,24 +39,27 @@ class Memes extends Component {
 			input2: !this.state.input2,
 		});
 	}
-	render() {
+	render() {	
 		return (
 			<div className="row">
-					<div className="form-group">
-						<div className="col-xs-6 memes">
-							<label className="btn btn-primary memeLabel">
-								<img src={this.props.war && this.props.war.meme1.image} alt="..." className={'img-thumbnail img-check' + (this.state.input1 && ' check')} onClick={this.handleToggle} />
-								<input type="checkbox" className="hidden" autoComplete="off" />
-							</label>
-						</div>
-						<div className="col-xs-6 memes">
-							<label className="btn btn-primary memeLabel">
-								<img src={this.props.war && this.props.war.meme2.image} alt="..." className={'img-thumbnail img-check' + (this.state.input2 && ' check')} onClick={this.handleToggle} />
-								<input type="checkbox" className="hidden" autoComplete="off" />
-							</label>
-						</div>
+				<div className="form-group">
+					<div className="col-xs-6 memes">
+						<label className="btn btn-primary memeLabel">
+							<img src={this.props.war && this.props.war.meme1.image} alt="..." className={'img-thumbnail img-check' + (this.state.input1 && ' check')} onClick={this.handleToggle} />
+							<input type="checkbox" className="hidden" autoComplete="off" /><br />
+							<p>{this.props.war && this.props.war.meme1pts}</p>
+						</label>
 					</div>
-					<input type="submit" value="Vote" className="btn btn-default col-xs-2 memeBtn" onClick={this.handleUpvote} />
+					<div className="col-xs-6 memes">
+						<label className="btn btn-primary memeLabel">
+							<img src={this.props.war && this.props.war.meme2.image} alt="..." className={'img-thumbnail img-check' + (this.state.input2 && ' check')} onClick={this.handleToggle} />
+							<input type="checkbox" className="hidden" autoComplete="off" /><br />
+							<p>{this.props.war && this.props.war.meme2pts}</p>
+						</label>
+					</div>
+				</div>
+				<br />
+				{this.props.auth.isAuthenticated() ? <input type="submit" value="Vote" className="btn btn-default col-xs-2 memeBtn" onClick={this.handleUpvote} /> : ""}
 			</div>
 		);
 	}

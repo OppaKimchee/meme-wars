@@ -33,7 +33,7 @@ class WarPage extends Component {
 	render() {
 		return (
 			<div className="memesContainer">
-				<Memes war={this.state.war} warUpdated={this.warUpdated} />
+				<Memes war={this.state.war} warUpdated={this.warUpdated} auth={this.props.auth} />
 			</div>
 		);
 	}

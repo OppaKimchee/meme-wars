@@ -12,13 +12,14 @@ class Profile extends Component {
 	// Display the user's profile
 	showLoggedIn() {
 		var profile = JSON.parse(localStorage.getItem('profile'));
+		console.log(profile)
 		return profile;
 	};
 
 	render(){
 		return (
 			<div className="profile">
-				{ this.showLoggedIn().name }
+				{ this.showLoggedIn().name }<br/>
 				{ this.showLoggedIn().email }
 				<img className="img-responsive" src={this.showLoggedIn().picture} alt="profile pic"/>
 			</div>
