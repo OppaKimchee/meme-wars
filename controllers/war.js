@@ -21,10 +21,11 @@ const getCurrentWar = (req, res) => {
 };
 
 const hasExpired = (war) => {
-	const expirationMinutes = 1000 * 5 * 60;
+	const expirationMinutes = 1000 * 5 * 60 * 60;
 	// let result = moment().diff(war.createdAt);
 	// let format = moment(result).format('mm');
 	const diff = Date.now() - war.createdAt.getTime();
+	console.log(diff / 1000)
 	if (diff > expirationMinutes) {
 		console.log('war is expired');
 		return true;
