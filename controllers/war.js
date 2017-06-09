@@ -9,26 +9,23 @@ const index = (req, res) => {
 };
 
 const getCurrentWar = (req, res) => {
-	War.findOne({}, {}, { sort: { 'created_at': 1 } })
+	War.findOne({}).sort('-createdAt')
 		.populate('meme1 meme2')
 		.exec((err, war) => {
-			if (err) return res.status(400).json("error getting current war");
-			// if no war exists OR war has expired
-			//    generate new war and return it
-			// else
-			//   return war
-			if(!war && checkExpiration ){
-				return createWar();
+			if (!war || hasExpired(war)) {
+				createWar().then(war => res.json(war));
+			} else {
+				res.json(war);
 			}
-			res.json(war);
 		});
 };
 
-const checkExpiration = (war) => {
-	const expirationMinutes = 5;
-	let result = moment().diff(war.createdAt);
-	let format = moment(result).format('mm');
-	if (format > expirationMinutes){
+const hasExpired = (war) => {
+	const expirationMinutes = 1000 * 5 * 60;
+	// let result = moment().diff(war.createdAt);
+	// let format = moment(result).format('mm');
+	const diff = Date.now() - war.createdAt.getTime();
+	if (diff > expirationMinutes) {
 		console.log('war is expired');
 		return true;
 	}
@@ -36,61 +33,56 @@ const checkExpiration = (war) => {
 	return false;
 };
 
-// const newWar = (req, res) => {
-// 	War.findOne({}, {}, { sort: { 'created_at': 1 } }, (err, war) => {
-// 		if (err) return console.log('err');
-// 		console.log('?', war)
-// 		if (war === null) {
-// 			createWar();
-// 		} else {
-// 			generateNewWarFromPost(war);
-// 		}
-// 	});
-// };
-
+const getWinningMeme = (war) => {
+	return war.meme1pts > war.meme2pts ? war.meme1 : war.meme2;
+};
 
 function createWar() {
-	// get the last war is there is one
-		// if there is a prev war
-			// get the winning post assign to meme1
-		// else
-			// get an unused meme for meme1
-		// end if
-		// get a post for meme2 assign to meme2
-		// create a new war
-		// assing meme1 & meme2
-		// return war
-
-	Post.find({ used: false }, (err, posts) => {
-		if (posts.length < 2) {
-			return console.log('not enough memes to war');
-		}
-		let newWar = new War();
-		newWar.meme1 = posts[0]._id;
-		newWar.meme2 = posts[1]._id;
-		posts[0].used = true;
-		posts[1].used = true;
-		newWar.save()
-			.then((e) => {
-				console.log(e)
-			})
-			.catch(err => {
-				console.log('error saving first war');
-			});
-	});
+	var newWar = new War();
+	return War.findOne({}).sort('-createdAt')
+		.exec()
+		.then(war => {
+			if (war) {
+				newWar.meme1 = getWinningMeme(war);
+				return getMeme();
+			} else {
+				return getMeme()
+					.then(meme => {
+						newWar.meme1 = meme;
+						return getMeme();
+					});
+			}
+		})
+		.then(meme => {
+			newWar.meme2 = meme;
+			return newWar.save();
+		})
+		.then(newWar => {
+			return War.findById(newWar._id).populate('meme1 meme2').exec();
+		});
 }
 
-// function generateNewWarFromPost(previousWar) {
-// 	Post.find({ used: false }, (err, posts) => {
-// 		if (posts.length < 2) {
-// 			return console.log('not enough memes to war');
-// 		}
-// 		let war = new War();
+function getMeme() {
+	return Post.findOne({ used: false })
+		.exec()
+		.then(post => {
+			post.used = true;
+			return post.save();
+		});
+}
 
-// 	});
-// }
-
-// newWar();
+const upvote = (req, res) => {
+	console.log(req.params);
+	War.findOne({}).sort('-createdAt')
+		.populate('meme1 meme2')
+		.exec((err, war) => {
+			if (err) return res.status(400).json('no war to upvote');
+			req.params.meme === 'meme1pts' ? war.meme1pts++ : war.meme2pts++;
+			war.save()
+				.then(war => res.json(war));
+			console.log(war);
+		});
+};
 
 /* 
 War.find({}).distinct('meme1').distinct('meme2')
@@ -106,6 +98,7 @@ War.find({}).distinct('meme1').distinct('meme2')
 
 const wars = {
 	index,
-	getCurrentWar
+	getCurrentWar,
+	upvote
 };
 module.exports = wars;

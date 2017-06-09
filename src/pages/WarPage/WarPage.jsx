@@ -14,6 +14,10 @@ class WarPage extends Component {
 		this.currentWar();
 	}
 
+	warUpdated = (war) => {
+		this.setState({war});
+	}
+
 	currentWar = () => {
 		return fetch('/api/wars/currentwar', {
 			method: 'GET',
@@ -29,7 +33,7 @@ class WarPage extends Component {
 	render() {
 		return (
 			<div className="memesContainer">
-				<Memes war={this.state.war} />
+				<Memes war={this.state.war} warUpdated={this.warUpdated} />
 			</div>
 		);
 	}

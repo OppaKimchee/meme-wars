@@ -3,11 +3,7 @@
 	color: #996;
 }
 
-.memes {
-	height: 100%;
-}
-
-.row, .memeForm, .memeLabel {
+.row, .memes, .memeLabel {
 	height: 100%;
 }
 

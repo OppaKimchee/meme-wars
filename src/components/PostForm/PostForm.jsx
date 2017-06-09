@@ -19,8 +19,7 @@ class PostForm extends Component {
 		this.setState({
 			// Using ES2015 Computed Property Names
 			[field]: e.target.value
-		});
-		console.log(this.state)    
+		}); 
 	}
 
 	submitPost = (post) => {

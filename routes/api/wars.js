@@ -4,6 +4,6 @@ const wars = require('../../controllers/war');
 
 router.get('/', wars.index);
 router.get('/currentwar', wars.getCurrentWar);
-// router.get('/upvote/:meme', wars.upvote);
+router.get('/upvote/:meme', wars.upvote);
 
 module.exports = router;

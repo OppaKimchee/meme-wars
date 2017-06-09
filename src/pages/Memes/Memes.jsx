@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './Memes.css';
 
 class Memes extends Component {
-	constructor(props) {
-		super(props);
+	constructor() {
+		super();
 		this.state = {
 			input1: true,
 			input2: false
@@ -27,7 +27,9 @@ class Memes extends Component {
 			header: new Headers({'Content-Type': 'application/json'})
 		})
 		.then(res => res.json())
-		.then(war => war)
+		.then(war => {
+			this.props.warUpdated(war);
+		})
 		.catch(err => console.log(err));
 	}
 
@@ -40,7 +42,6 @@ class Memes extends Component {
 	render() {
 		return (
 			<div className="row">
-				<form className="memeForm" method="get">
 					<div className="form-group">
 						<div className="col-xs-6 memes">
 							<label className="btn btn-primary memeLabel">
@@ -55,8 +56,7 @@ class Memes extends Component {
 							</label>
 						</div>
 					</div>
-					<input type="submit" value="Vote" className="btn btn-default col-xs-2 memeBtn" />
-				</form>
+					<input type="submit" value="Vote" className="btn btn-default col-xs-2 memeBtn" onClick={this.handleUpvote} />
 			</div>
 		);
 	}
