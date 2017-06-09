@@ -7,7 +7,7 @@ export default class Auth {
 		oidcConformant: true,
 		autoclose: true,
 		auth: {
-			redirect: false,
+			redirectUrl: false,
 			responseType: 'token id_token',
 			audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/userinfo`,
 			params: {
